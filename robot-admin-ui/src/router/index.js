@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Knowledge from '@/components/Knowledge'
+import Button from '@/components/element/Button'
+import Login from '@/components/Login'
 
 Vue.use(Router)
 
@@ -19,6 +21,16 @@ export default new Router({
       meta:{
         title:"知识点管理"
       }
+    },
+    {
+      path: '/button',
+      name: 'Button',
+      component: Button,
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login,
     }
   ]
 })
