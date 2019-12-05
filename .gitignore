@@ -30,3 +30,6 @@ target/
 
 ### VS Code ###
 .vscode/
+
+robot-admin-server/src/main/resources/public
+
