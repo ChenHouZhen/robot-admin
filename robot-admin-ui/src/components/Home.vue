@@ -4,11 +4,19 @@
             <el-header class="home-header">
                 <span>机器人</span>
                 <div class="home-header-info">
-                    <div style="font-size:24px">
-                        <i class="el-icon-chat-dot-round" style="margin-right: 20px;"></i>
-                    </div>
-                    <span>{{username}}</span>
-                    <i><img src="http://bpic.588ku.com/element_pic/01/40/00/64573ce2edc0728.jpg"></i>
+                    <i class="el-icon-chat-dot-round" style="margin-right: 20px; font-size:24px;"></i>
+                    <el-dropdown @command="handleCommand">
+                        <div style="display: flex;align-items: center; cursor: pointer;">
+                            <span>{{username}}</span>
+                            <i><img style="width: 40px;height: 40px;border-radius: 40px" src="http://bpic.588ku.com/element_pic/01/40/00/64573ce2edc0728.jpg"></i>
+                        </div>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="user">个人中心</el-dropdown-item>
+                            <el-dropdown-item command="setting">设置</el-dropdown-item>
+                            <el-dropdown-item command="logout" divided>注销</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+             
                 </div>
             </el-header>
             <el-container>
@@ -25,6 +33,12 @@ export default {
        return {
            username:'系统管理员'
        }
+   },
+   methods:{
+        handleCommand(command){
+           console.log("点击下拉："+ command)
+        //    this.$message("点击下拉："+ command)
+        }
    }
 }
 </script>
@@ -59,16 +73,6 @@ export default {
         align-items: center;
     }
 
-    .home-header-info i{
-        cursor: pointer;
-    }
-
-    .home-header-info > i > img {
-        width: 40px;
-        height: 40px;
-        border-radius: 40px
-    }
-    
     .home-slider{
         width: 200px;
     }
