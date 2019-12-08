@@ -20,7 +20,14 @@
                 </div>
             </el-header>
             <el-container>
-                <el-slider class="home-slider">Aside</el-slider>
+                <el-aside class="home-slider">
+                    <el-menu>
+                         <el-menu-item v-for="(item , index) in this.routes" :key="index+''" :index="index+''">
+                            <i class="el-icon-menu"></i>
+                            <span slot="title">{{item.name}}</span>
+                        </el-menu-item>
+                    </el-menu>
+                </el-aside>
                 <el-main class="home-main">main</el-main>
             </el-container>
         </el-container>
@@ -28,6 +35,8 @@
 </template>
 
 <script>
+
+
 export default {
    data(){
        return {
@@ -39,6 +48,12 @@ export default {
            console.log("点击下拉："+ command)
         //    this.$message("点击下拉："+ command)
         }
+   },
+   computed:{
+       routes(){
+           console.log("router：",this.$router.options.routes);
+           return this.$router.options.routes;
+       }
    }
 }
 </script>
