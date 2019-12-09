@@ -24,25 +24,21 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside class="home-slider">
-          <el-menu unique-opened router>
-            <!-- <el-menu-item v-for="(item , index) in this.routes" :key="item.path" :index="index+''">
-                            <i class="el-icon-menu"></i>
-                            <span slot="title">{{item.name}}</span>
-            </el-menu-item>-->
+        <el-aside class="home-aside" style="display: flex;justify-content: flex-start;width:180px;text-align: left;">
+          <el-menu unique-opened router style="width: 180px;">
             <template v-for="(item,index) in this.routes">
-                <el-submenu :key="index+''" :index="index+''" v-if="item.children && item.children.length != 0">
-                    <template slot="title">
+                <el-submenu :key="index+''" :index="index+''" v-if="item.children && item.children.length != 0" >
+                    <template slot="title" >
                         <span>{{item.meta.title}}</span>
                     </template>
-                    <el-menu-item width="180px" v-for="child in item.children"  :index="child.path"  :key="child.path">
+                    <el-menu-item style="padding-left: 35px" width="180px" v-for="child in item.children"  :index="child.path"  :key="child.path">
                         <span>{{child.meta.title}}</span>
                     </el-menu-item>                    
                 </el-submenu>
             </template>
           </el-menu>
         </el-aside>
-        <el-main class="home-main">
+        <el-main>
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
             <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
@@ -106,13 +102,4 @@ export default {
   align-items: center;
 }
 
-.home-slider {
-  width: 200px;
-}
-
-.home-main {
-  background: rgb(237, 233, 243);
-  text-align: center;
-  line-height: 160px;
-}
 </style>
