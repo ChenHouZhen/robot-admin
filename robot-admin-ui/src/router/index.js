@@ -16,19 +16,6 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/knowledge',
-      name: 'Knowledge',
-      component: Knowledge,
-      meta:{
-        title:"知识点管理"
-      }
-    },
-    {
-      path: '/button',
-      name: 'Button',
-      component: Button,
-    },
-    {
       path: '/login',
       name: 'Login',
       component: Login,
@@ -37,6 +24,27 @@ export default new Router({
       path: '/home',
       name: 'Home',
       component: Home,
+      meta:{
+        title:"系统管理"
+      },
+      children:[
+        {
+          path: '/button',
+          name: 'Button',
+          component: Button,
+          meta:{
+            title:"按钮管理"
+          }
+        },
+        {
+          path: '/knowledge',
+          name: 'Knowledge',
+          component: Knowledge,
+          meta:{
+            title:"知识点管理"
+          }
+        },
+      ]
     }
   ]
 })
