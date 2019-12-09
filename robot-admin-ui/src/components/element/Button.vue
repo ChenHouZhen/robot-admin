@@ -1,11 +1,8 @@
 <template>
     <div>
         <el-button type='primary' @click="login">登陆</el-button>
-        <ul class="nav">
-            <li value="1">1</li>
-            <li value="1">2</li>
-            <li value="1">3</li>
-            <li value="1">4</li>
+        <ul class="nav" @click="selectNav">
+            <li v-for="(item, index) in navList" :key="index" :data-index="index">{{item}}</li>
         </ul>
     </div>
 </template>
@@ -17,12 +14,23 @@ export default {
     name: 'Button',
     data() {
         return {
-            msg:"按钮"
+            msg:"按钮",
+            navList:[1,2,3,4,5]
         }
     },
     methods: {
         login(){
             alert("登陆成功")
+        },
+        selectNav(e){
+            console.log("e",e);
+            let dom  = e.target;
+            console.log(dom);
+            let index = dom.getAttribute('data-index');
+         
+            
+            console.log("index:"+ index);
+            this.$message("index: "+index +"  value: " );
         }
     },
 }
@@ -46,6 +54,7 @@ export default {
         margin: 10px;
         cursor: pointer;
         overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
 
