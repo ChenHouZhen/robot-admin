@@ -6,11 +6,13 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import {postRequest} from './utils/api'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 
 Vue.prototype.postRequest = postRequest
+Vue.prototype.$axios = axios
 
 /* eslint-disable no-new */
 new Vue({

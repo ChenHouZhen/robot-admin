@@ -5,6 +5,7 @@ import Knowledge from '@/components/Knowledge'
 import Button from '@/components/element/Button'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
+import Table from '@/components/element/Table'
 
 Vue.use(Router)
 
@@ -34,6 +35,14 @@ export default new Router({
           component: Button,
           meta:{
             title:"按钮管理"
+          }
+        },
+        {
+          path: '/table',
+          name: 'Table',
+          component: Table,
+          meta:{
+            title:"表格管理"
           }
         },
         {

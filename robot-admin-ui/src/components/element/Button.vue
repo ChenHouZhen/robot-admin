@@ -1,6 +1,29 @@
 <template>
     <div>
-        <el-button type='primary' @click="login">登陆</el-button>
+        <el-button type='primary' @click="get">获取表格</el-button>
+        <el-button type='primary' @click="refresh">刷新表格</el-button>
+  
+        <div>
+            <el-table :data="menuData" max-height="250" style="width:100%" v-loading="tableLoading">
+                <el-table-column prop="id" label="ID" width="180px"></el-table-column>
+                <el-table-column prop="name" label="姓名" width="180px">
+                    <template slot-scope="scope">
+                        <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="path" label="路径" width="180px"></el-table-column>
+                <el-table-column prop="iconCls" label="图标" width="180px"></el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination background layout="prev, pager, next" :total="tableTotal" :current-page.sync="currentPage">
+            </el-pagination>
+        </div>
+
         <ul class="nav" @click="selectNav">
             <li v-for="(item, index) in navList" :key="index" :data-index="index">{{item}}</li>
         </ul>
@@ -9,28 +32,51 @@
 
 
 
-<<script>
+<script>
+
 export default {
     name: 'Button',
     data() {
         return {
+            menuData:[],
             msg:"按钮",
-            navList:[1,2,3,4,5]
+            navList:[1,2,3,4,5],
+            tableLoading:false,
+            tableTotal: -1,
+            currentPage:1,
         }
     },
     methods: {
-        login(){
-            alert("登陆成功")
+        get(){
+            let _this = this;
+            _this.tableLoading = true;
+            this.$axios.get("/api/config/sysmenu").then(function(res) {
+                console.log("res",res);
+                if (res && res.status == 200) {
+                    _this.tableLoading = false;
+                    _this.menuData = res.data;                    
+                }
+            })
+        },
+        refresh(){
+            this.menuData=[];
         },
         selectNav(e){
             console.log("e",e);
             let dom  = e.target;
             console.log(dom);
             let index = dom.getAttribute('data-index');
-         
-            
             console.log("index:"+ index);
             this.$message("index: "+index +"  value: " );
+        },
+        handleEdit(index, row){
+            console.log("正在编辑");
+            console.log("index: "+index + " row: ", row);
+            
+        },
+        handleDelete(index, row){
+            console.log("正在删除");
+            console.log("index: "+index + " row: ", row);
         }
     },
 }
