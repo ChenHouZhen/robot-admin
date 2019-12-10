@@ -1,9 +1,14 @@
 package com.chenhz.server.mybatisplus.generator;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class CodeGenerator {
 
@@ -48,7 +53,7 @@ public abstract class CodeGenerator {
         PackageConfig pc = getPackageConfig(app);
 
         // 自定义配置
-       // InjectionConfig cfg = getInjectionConfig();
+        InjectionConfig cfg = getInjectionConfig();
 
         // 代码生成器
         new AutoGenerator()
@@ -56,7 +61,7 @@ public abstract class CodeGenerator {
                 .setStrategy(strategy)
                 .setGlobalConfig(gc)
                 .setPackageInfo(pc)
-             //   .setCfg(cfg)
+                .setCfg(cfg)
                 .setTemplate(new TemplateConfig().setXml("/templates/mapper.xml"))
                 .setTemplateEngine(new FreemarkerTemplateEngine())
                 .execute();
@@ -112,27 +117,27 @@ public abstract class CodeGenerator {
         return pc;
     }
 
-//    public InjectionConfig getInjectionConfig(){
-//        InjectionConfig cfg = new InjectionConfig() {
-//            @Override
-//            public void initMap() {
-//                // to do nothing
-//            }
-//        };
-//        List<FileOutConfig> focList = new ArrayList<>();
-//        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
-//            @Override
-//            public String outputFile(TableInfo tableInfo) {
-//                // 自定义输入文件名称
-//                return projectPath + "/src/main/resources/mappers/knowledge/"
-//                        +tableInfo.getEntityName().replace("Entity","")+ "Mapper.xml";
-//            }
-//        });
-//
-//        cfg.setFileOutConfigList(focList);
-//
-//        return cfg;
-//    }
+    public InjectionConfig getInjectionConfig(){
+        InjectionConfig cfg = new InjectionConfig() {
+            @Override
+            public void initMap() {
+                // to do nothing
+            }
+        };
+        List<FileOutConfig> focList = new ArrayList<>();
+        focList.add(new FileOutConfig("/templates/mapper.xml.ftl") {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                // 自定义输入文件名称
+                return projectPath + "/src/main/resources/mappers/knowledge/"
+                        +tableInfo.getEntityName().replace("Entity","")+ "Mapper.xml";
+            }
+        });
+
+        cfg.setFileOutConfigList(focList);
+
+        return cfg;
+    }
 
 
     public void generateByTables(String... tableNames){
