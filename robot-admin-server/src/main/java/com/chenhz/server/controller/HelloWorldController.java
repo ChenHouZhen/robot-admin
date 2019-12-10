@@ -1,6 +1,6 @@
 package com.chenhz.server.controller;
 
-import com.chenhz.server.R;
+import com.chenhz.server.utils.R;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
