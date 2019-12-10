@@ -62,7 +62,7 @@ public abstract class CodeGenerator {
                 .setGlobalConfig(gc)
                 .setPackageInfo(pc)
                 .setCfg(cfg)
-                .setTemplate(new TemplateConfig().setXml("/templates/mapper.xml"))
+                .setTemplate(new TemplateConfig().setXml(null))
                 .setTemplateEngine(new FreemarkerTemplateEngine())
                 .execute();
     }
@@ -129,7 +129,7 @@ public abstract class CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return projectPath + "/src/main/resources/mappers/knowledge/"
+                return projectPath + "/src/main/resources/mappers/"
                         +tableInfo.getEntityName().replace("Entity","")+ "Mapper.xml";
             }
         });
