@@ -1,7 +1,7 @@
 package com.chenhz.server.mybatisplus.generator;
 
 public enum Application {
-    ADMIN(new String[]{"com.chenhz.server","service-course-core"});
+    ADMIN(new String[]{"com.chenhz.server",""});
 
     private String[] path;
 

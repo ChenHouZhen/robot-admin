@@ -88,7 +88,7 @@ public abstract class CodeGenerator {
     public GlobalConfig getGlobalConfig(){
         GlobalConfig gc = new GlobalConfig();
         gc.setOutputDir(projectPath + "/src/main/java")
-                .setAuthor("")
+                .setAuthor("chenhz")
                 .setOpen(false)
                 // .setFileOverride(true)
                 .setEnableCache(false)
@@ -102,12 +102,12 @@ public abstract class CodeGenerator {
     public PackageConfig getPackageConfig(Application app){
         PackageConfig pc = new PackageConfig();
         pc.setParent(app.getPath()[0])
-                .setEntity("domain")
-//                .setController("controller")
+                .setEntity("entity")
+                .setController("controller")
                 .setController(null)
                 .setService("service")
                 .setServiceImpl("service.impl")
-                .setMapper("dao");
+                .setMapper("mapper");
 
         return pc;
     }
