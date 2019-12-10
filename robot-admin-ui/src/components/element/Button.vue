@@ -2,11 +2,20 @@
     <div>
         <el-button type='primary' @click="get">获取表格</el-button>
         <el-button type='primary' @click="refresh">刷新表格</el-button>
-  
+        <button class="button" type="button"><span>自定义按钮</span></button>
         <div>
-            <el-table :data="menuData" max-height="250" style="width:100%" v-loading="tableLoading">
+            <el-table :data="menuData" max-height="250" style="width:100%" v-loading="tableLoading" row-key="path"  :tree-props="{children: 'children'}">>
+                <!-- <el-table-column type="expand">
+                    <template slot-scope="props">
+                        <el-form>
+                            <el-table-column label="姓名" prop="">
+                                <span>{{props.row.children.name}}</span>
+                            </el-table-column>
+                        </el-form>
+                    </template>
+                </el-table-column> -->
                 <el-table-column prop="id" label="ID" width="180px"></el-table-column>
-                <el-table-column prop="name" label="姓名" width="180px">
+                <el-table-column prop="name" label="姓名" width="180px" >
                     <template slot-scope="scope">
                         <el-tag size="medium">{{ scope.row.name }}</el-tag>
                     </template>
@@ -84,6 +93,24 @@ export default {
 
 
 <style>
+
+    .button{
+        /* width: 100px;
+        height: 50px; */
+        color: #fff;
+        font-size: 14px;
+        padding: 10px 12px;
+        border-radius: 4px;
+        border:1px solid #409EFF;
+        background-color: #409EFF;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: 0.5s;
+    }
+
+    .button:hover{
+        background-color: rgb(117, 181, 236);
+    }
 
     .nav{   
         display: flex;
