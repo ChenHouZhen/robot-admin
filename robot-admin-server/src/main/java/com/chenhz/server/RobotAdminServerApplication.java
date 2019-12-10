@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.chenhz.mapper")
+@MapperScan("com.chenhz.server.mapper")
 public class RobotAdminServerApplication {
 
     public static void main(String[] args) {

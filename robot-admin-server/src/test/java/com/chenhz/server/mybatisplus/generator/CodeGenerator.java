@@ -45,7 +45,6 @@ public abstract class CodeGenerator {
         // 策略配置
         StrategyConfig strategy = getStrategyConfig(tableNames);
 
-
         // 全局配置
         GlobalConfig gc = getGlobalConfig();
 
@@ -97,6 +96,7 @@ public abstract class CodeGenerator {
                 .setOpen(false)
                 // .setFileOverride(true)
                 .setEnableCache(false)
+                .setControllerName("%sController")
                 .setEntityName("%sEntity")
                 .setMapperName("%sMapper")
                 .setServiceName("%sService");
@@ -109,7 +109,6 @@ public abstract class CodeGenerator {
         pc.setParent(app.getPath()[0])
                 .setEntity("entity")
                 .setController("controller")
-                .setController(null)
                 .setService("service")
                 .setServiceImpl("service.impl")
                 .setMapper("mapper");

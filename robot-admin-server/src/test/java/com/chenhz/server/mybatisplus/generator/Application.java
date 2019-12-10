@@ -1,7 +1,7 @@
 package com.chenhz.server.mybatisplus.generator;
 
 public enum Application {
-    ADMIN(new String[]{"com.chenhz.server",""});
+    ADMIN(new String[]{"com.chenhz.server","robot-admin-server"});
 
     private String[] path;
 
