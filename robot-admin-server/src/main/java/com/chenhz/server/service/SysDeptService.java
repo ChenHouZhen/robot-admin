@@ -1,7 +1,9 @@
 package com.chenhz.server.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chenhz.server.entity.SysDeptEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chenhz.server.form.DeptInfoForm;
 
 /**
  * <p>
@@ -13,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysDeptService extends IService<SysDeptEntity> {
 
+
+    Page page(DeptInfoForm form);
 }
