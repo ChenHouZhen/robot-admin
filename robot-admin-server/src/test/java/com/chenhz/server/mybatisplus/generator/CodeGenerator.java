@@ -3,7 +3,10 @@ package com.chenhz.server.mybatisplus.generator;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
+import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
@@ -68,7 +71,21 @@ public abstract class CodeGenerator {
 
     public DataSourceConfig getDataSourceConfig(){
         DataSourceConfig dsc = new DataSourceConfig();
+        // mysql 字段映射 java 对象
+        MySqlTypeConvert typeConvert = new MySqlTypeConvert(){
+
+            @Override
+            public IColumnType processTypeConvert(GlobalConfig globalConfig, String fieldType) {
+                //将数据库中datetime转换成date
+                if (fieldType.toLowerCase().contains("datetime")) {
+                    return DbColumnType.DATE;
+                }
+                return super.processTypeConvert(globalConfig, fieldType);
+            }
+        };
+
         dsc.setUrl(dbUrl)
+                .setTypeConvert(typeConvert)
                 .setDriverName(driverName)
                 .setUsername(userName)
                 .setPassword(password);
