@@ -60,7 +60,7 @@ public class TreeBuilder {
         List<Node> notChildren = (List<Node>) CollectionUtils.subtract(allNodes,children);
         for (Node child: children){
             List<Node> tmpChildren = findChildren(child,notChildren);
-            if (tmpChildren == null || tmpChildren.size() < 1){
+            if (CollectionUtils.isEmpty(tmpChildren)){
                 child.setLeaf(true);
             }else {
                 child.setLeaf(false);
