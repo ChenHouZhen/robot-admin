@@ -11,6 +11,9 @@ import java.util.Date;
 
 /**
  * 解决后端接受前端传输的 Date 类型格式问题
+ *
+ * "@ControllerAdvice有控制器增强的作用，它主要用于定义@ExceptionHandler，@InitBinder和@ModelAttribute方法
+ *
  */
 @Slf4j
 @RestControllerAdvice

@@ -53,4 +53,10 @@ public class SysUserController {
         return R.ok().put("data",form);
     }
 
+    @DeleteMapping("/{userId}")
+    @ApiOperation("删除")
+    public R delete(@PathVariable Long userId){
+        return R.ok().put("data",userId);
+    }
+
 }

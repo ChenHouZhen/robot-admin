@@ -33,3 +33,5 @@ target/
 
 robot-admin-server/src/main/resources/public
 
+robot-admin-server/src/main/resources/custom.properties
+
