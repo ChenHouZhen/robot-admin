@@ -16,7 +16,13 @@ public class TreeBuilder {
         List<Node> roots = findRoots(dirs);
         List<Node> notRoots = (List<Node>) CollectionUtils.subtract(dirs, roots);
         for (Node root : roots) {
-            root.setChildren(findChildren(root, notRoots));
+            List<Node> rootChildren = findChildren(root, notRoots);
+            if (CollectionUtils.isEmpty(rootChildren)){
+                root.setLeaf(Boolean.TRUE);
+            }else {
+                root.setLeaf(Boolean.FALSE);
+            }
+            root.setChildren(rootChildren);
         }
         return roots;
     }
