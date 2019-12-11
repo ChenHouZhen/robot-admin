@@ -11,4 +11,11 @@ public class PageForm {
 
     @ApiModelProperty(value = "每页数",example = "1")
     private Integer limit;
+
+//    @ApiModelProperty(value = "排序字段")
+//    private String sortBy;
+//
+//    @ApiModelProperty(value = "排序类型")
+//    private String sortType;
+
 }
