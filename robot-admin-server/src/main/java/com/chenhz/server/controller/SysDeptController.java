@@ -2,6 +2,7 @@ package com.chenhz.server.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chenhz.server.dto.Node;
 import com.chenhz.server.entity.SysDeptEntity;
 import com.chenhz.server.form.DeptForm;
 import com.chenhz.server.form.DeptInfoForm;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>
@@ -74,6 +76,14 @@ public class SysDeptController {
     @ApiOperation("查询")
     public R infos(DeptInfoForm form){
         Page data = sysDeptService.page(form);
+        return R.ok().put("data",data);
+    }
+
+
+    @GetMapping("/tree")
+    @ApiOperation("查询部门树")
+    public R tree(){
+        List<Node> data = sysDeptService.tree();
         return R.ok().put("data",data);
     }
 

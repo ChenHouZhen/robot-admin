@@ -6,6 +6,7 @@ import Button from '@/components/element/Button'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Table from '@/components/element/Table'
+import SysDept from '@/components/sys/SysDept'
 
 Vue.use(Router)
 
@@ -51,6 +52,14 @@ export default new Router({
           component: Knowledge,
           meta:{
             title:"知识点管理"
+          }
+        },
+        {
+          path: '/sys/dept',
+          name: 'SysDept',
+          component: SysDept,
+          meta:{
+            title:"部门管理"
           }
         },
       ]
