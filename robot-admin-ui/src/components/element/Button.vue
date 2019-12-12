@@ -95,17 +95,16 @@ export default {
 <style>
 
     .button{
-        /* width: 100px;
-        height: 50px; */
         color: #fff;
         font-size: 14px;
-        padding: 10px 12px;
+        padding: 12px;
         border-radius: 4px;
         border:1px solid #409EFF;
         background-color: #409EFF;
         margin-left: 10px;
         cursor: pointer;
         transition: 0.5s;
+        line-height: 1;
     }
 
     .button:hover{

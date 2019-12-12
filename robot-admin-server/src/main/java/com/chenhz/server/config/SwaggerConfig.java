@@ -25,8 +25,9 @@ public class SwaggerConfig {
         log.info(">>>>> 初始化 swagger <<<<<");
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.chenhz.server.controller"))
                 .build()
                 .apiInfo(apiInfo());
     }
