@@ -3,7 +3,7 @@
         <el-input placeholder="输入关键字进行过滤" v-model="filterText">
 
         </el-input>
-        <el-tree :data="data" node-key="id" :expand-on-click-node="true" :render-content="renderContent" 
+        <el-tree :data="data" node-key="id" :expand-on-click-node="false" :render-content="renderContent" 
         :props="defaultProps" :filter-node-method="filterNode" ref="tree">
         </el-tree>
 
@@ -39,7 +39,6 @@ export default {
                 pDeptId:'',
             },
             filterText:'',
-            clickNodeId:'',
             clickData:{},
             data:[],
             addFormVisible:false,
@@ -50,8 +49,11 @@ export default {
             }
         }
     },
+    // 在vue中，使用watch来响应数据的变化, filterText(),表示监听filterText数据
     watch: {
-      filterText(val) {
+      filterText(val,old) {
+        console.log("监听到 filterType 参数变化，新值为："+val+"  旧值为："+ old);
+        // filter() 函数会调用 filter-node-method 属性的方法，val参数会传递过去
         this.$refs.tree.filter(val);
       }
     },
@@ -101,10 +103,16 @@ export default {
            
             this.$axios.post('/api/dept',addParams)
             .then(res => {
-                console.log("res",res);
-                const newChild = {id:res.data.data.deptId,name:res.data.data.name, children: []};
-                console.log("111",newChild);
-                _this.clickData.children.push(newChild);
+                if(res && res.status == 200 && res.data.code ==200){
+                    console.log("res",res);
+                    const newChild = {id:res.data.data.deptId,name:res.data.data.name, children: []};
+                    console.log("111",newChild);
+                    _this.clickData.children.push(newChild);
+                     // 展开节点
+                    this.$refs.tree.getNode(this.addForm.pDeptId).expanded = true;
+                }else{
+                    this.$message.error("新增数据失败！"+ res.data.msg)
+                }
             })
             .catch(err =>{
                 this.$message.error("新增数据失败！")
@@ -120,7 +128,6 @@ export default {
         },
 
         filterNode(value, data){
-            console.log(">>>>> 调用 filter 方法");
             if(!value){
                 return true;
             }
