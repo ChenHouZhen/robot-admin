@@ -9,12 +9,13 @@ import lombok.Data;
 public class DeptForm {
 
     @ApiModelProperty(value = "父级ID")
-    private Long pDeptId;
+    private Long pid;
 
     @ApiModelProperty(value = "部门名称")
     private String deptName;
 
     @ApiModelProperty(value = "排序")
     private Integer orderNum;
+
 
 }

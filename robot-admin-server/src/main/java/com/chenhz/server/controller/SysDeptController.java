@@ -42,11 +42,11 @@ public class SysDeptController {
         entity.setCreateTime(new Date());
         entity.setName(form.getDeptName());
         entity.setOrderNum(form.getOrderNum());
-        entity.setParentId(form.getPDeptId());
+        entity.setParentId(form.getPid());
 
         sysDeptService.save(entity);
 
-        return R.ok().put("data",entity);
+        return R.ok().put("data",sysDeptService.getById(entity.getDeptId()));
     }
 
     @PutMapping(value = "/{deptId}")
@@ -57,7 +57,7 @@ public class SysDeptController {
         entity.setDeptId(deptId);
         entity.setName(form.getDeptName());
         entity.setOrderNum(form.getOrderNum());
-        entity.setParentId(form.getPDeptId());
+        entity.setParentId(form.getPid());
 
         sysDeptService.updateById(entity);
 
