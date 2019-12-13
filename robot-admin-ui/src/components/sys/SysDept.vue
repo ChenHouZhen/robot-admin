@@ -1,19 +1,19 @@
 <template>
     <div class="custom-frame">
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText">
-
+        <el-input placeholder="输入关键字进行过滤" v-model="filterText" style="margin-bottom: 20px">
         </el-input>
         <el-tree :data="data" node-key="id" :expand-on-click-node="false" :render-content="renderContent" 
-        :props="defaultProps" :filter-node-method="filterNode" ref="tree" v-loading="treeLoading">
+        :props="defaultProps" :filter-node-method="filterNode" ref="tree" v-loading="treeLoading" highlight-current>
         </el-tree>
 
-        <el-dialog title="新增部门" :visible.sync="addFormVisible">
-            <el-form :model="addForm">
+        <el-dialog title="新增部门" :visible.sync="addFormVisible" width="25%" top="16vh" hide-required-asterisk="true"
+        @keyup.enter.native="append()">
+            <el-form :model="addForm" size="medium" label-width="90px">
               <el-form-item label="上级部门ID" >
                   <el-input :disabled="true" v-model="addForm.pDeptId" placeholder=""></el-input>
               </el-form-item>
-              <el-form-item label="部门名">
-                  <el-input v-model="addForm.deptName" placeholder=""></el-input>
+              <el-form-item label="部门名" required >
+                  <el-input  v-model="addForm.deptName" placeholder=""></el-input>
               </el-form-item>
               <el-form-item label="排序">
                   <el-input v-model="addForm.orderNum" placeholder=""></el-input>
@@ -22,6 +22,22 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addFormVisible=false">取 消</el-button>
                 <el-button type="primary" @click="append()">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="编辑部门" :visible.sync="editFormVisible" width="25%" top="16vh" hide-required-asterisk="true"
+        @keyup.enter.native="edit()">
+            <el-form :model="editForm" size="medium" label-width="90px">
+              <el-form-item label="部门名" required >
+                  <el-input v-model="editForm.deptName"></el-input>
+              </el-form-item>
+              <el-form-item label="排序">
+                  <el-input v-model="editForm.orderNum"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="editFormVisible=false">取 消</el-button>
+                <el-button type="primary" @click="edit()">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -35,8 +51,13 @@ export default {
         return {
             addForm:{
                 deptName:'',
-                orderNum: '',
+                orderNum: '1',
                 pDeptId:'',
+            },
+            editForm:{
+                id:'',
+                deptName:'',
+                orderNum:1
             },
             treeLoading:false,
             filterText:'',
@@ -44,6 +65,7 @@ export default {
             isNext:false,
             parentNode:{},
             addFormVisible:false,
+            editFormVisible:false,
             defaultProps:{
                 children:'children',
                 label:'name',
@@ -102,6 +124,12 @@ export default {
             this.addFormVisible=true;
         },
 
+        showEditForm(node,data){
+            this.editFormVisible = true;
+            console.log("data",data);
+            this.editForm.id = data.id;
+        },
+
         openDeleteForm(node){
             let _this = this;
             console.log("删除，id: "+node.key);
@@ -118,8 +146,30 @@ export default {
 
         cleanAddForm(){
             this.addForm.deptName='';
-            this.addForm.orderNum='';
+            this.addForm.orderNum='1';
             this.addForm.pDeptId='';
+            // this.$refs.addForm.resetFields();
+        },
+        edit(){
+            console.log("编辑");
+            this.editFormVisible = false;
+            let _this = this;
+            let params = {
+                "deptName":this.editForm.deptName,
+                "orderNum":this.editForm.orderNum
+            }
+            this.$axios.put('/api/v1/dept/'+this.editForm.id,params).then(res => {
+                console.log("edit response",res);
+                
+                if(res && res.status == 200 && res.data.code == 200){
+                    console.log("编辑成功");
+                    this.$refs.tree.getNode(this.editForm.id).data.name = res.data.data.name;
+                     this.cleanAddForm();
+                }else{
+                    _this.$message.error('编辑部门失败');
+                }
+                this.editFormVisible = false;
+            })
         },
 
         append(){
@@ -203,6 +253,7 @@ export default {
                 <div class="custom-tree-node">
                     <span>{node.label}</span>
                     <span>
+                        <el-button size="mini" type="text" on-click={() => {this.showEditForm(node,data)}}>Edit</el-button>
                         <el-button size="mini" type="text" on-click={() => {this.showAddForm(node,data,false)}}>Insert</el-button>
                         <el-button size="mini" type="text" on-click={() => {this.showAddForm(node,data,true)}}>Append</el-button>
                         <el-button size="mini" type="text" on-click={() => this.openDeleteForm(node)}>Delete</el-button>
@@ -228,20 +279,22 @@ export default {
         padding-top: 20px;
     }
 
-    .custom-frame .el-input{
-        margin-bottom: 20px;
-    }
-
     .custom-tree-node{
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 14px;
+        font-size: 15px;
         padding-right: 8px;
         flex:1;
+        font-family:"Microsoft YaHei","黑体","宋体",sans-serif;
     }
-    .el-tree-node{
-        margin-top: 8px;
-        font-family:'Avenir', Helvetica, Arial, sans-serif;
+
+    .el-tree-node__content{
+        height: 38px;
     }
+
+    .el-dialog__body{
+        padding: 10px 20px;
+    }
+
 </style>
