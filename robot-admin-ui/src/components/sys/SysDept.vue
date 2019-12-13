@@ -4,7 +4,7 @@
 
         </el-input>
         <el-tree :data="data" node-key="id" :expand-on-click-node="false" :render-content="renderContent" 
-        :props="defaultProps" :filter-node-method="filterNode" ref="tree">
+        :props="defaultProps" :filter-node-method="filterNode" ref="tree" v-loading="treeLoading">
         </el-tree>
 
         <el-dialog title="新增部门" :visible.sync="addFormVisible">
@@ -38,8 +38,8 @@ export default {
                 orderNum: '',
                 pDeptId:'',
             },
+            treeLoading:false,
             filterText:'',
-            clickData:{},
             data:[],
             addFormVisible:false,
             defaultProps:{
@@ -75,14 +75,13 @@ export default {
                 this.$message.error("获取数据失败！")
                 console.log(err);
             })
+             this.treeLoading = false;
         },
         showAddForm(node,data){
             console.log(">>>>> node",node);
             this.addFormVisible=false;
             this.addForm.pDeptId = node.key;
-            this.clickData = data;
             console.log(">>>>> pDeptId",this.addForm.pDeptId);
-            console.log(">>>>> clickData",this.clickData);
             console.log(">>>>> this.$refs.tree",this.$refs.tree);
             // this.$refs 是啥？
              console.log(">>>>> node",this.$refs.tree.getNode(node.key));
@@ -99,7 +98,11 @@ export default {
             let _this = this;
             console.log(">>>>> 新增");
             console.log(">>>>> form",this.addForm);
-            let addParams = {"deptName":this.addForm.deptName,"orderNum":this.addForm.orderNum,"pid":this.addForm.pDeptId}
+            let addParams = {
+                "deptName":this.addForm.deptName,
+                "orderNum":this.addForm.orderNum,
+                "pid":this.addForm.pDeptId
+            }
            
             this.$axios.post('/api/dept',addParams)
             .then(res => {
@@ -107,18 +110,21 @@ export default {
                     console.log("res",res);
                     const newChild = {id:res.data.data.deptId,name:res.data.data.name, children: []};
                     console.log("111",newChild);
-                    _this.clickData.children.push(newChild);
+                    console.log("node",this.$refs.tree.getNode(this.addForm.pDeptId));
+                    // 插入子类
+                    _this.$refs.tree.getNode(this.addForm.pDeptId).data.children.push(newChild);
                      // 展开节点
-                    this.$refs.tree.getNode(this.addForm.pDeptId).expanded = true;
+                    _this.$refs.tree.getNode(this.addForm.pDeptId).expanded = true;
                 }else{
-                    this.$message.error("新增数据失败！"+ res.data.msg)
+                    _this.$message.error("新增数据失败！"+ res.data.msg)
                 }
+                this.cleanAddForm();
             })
             .catch(err =>{
                 this.$message.error("新增数据失败！")
                 console.log(err);
             })
-            this.cleanAddForm();
+            
             this.addFormVisible=false;
         },
 
@@ -148,6 +154,7 @@ export default {
         }
     },
     mounted:function(){
+        this.treeLoading = true;
         this.queryDeptTree();
     }
 }
