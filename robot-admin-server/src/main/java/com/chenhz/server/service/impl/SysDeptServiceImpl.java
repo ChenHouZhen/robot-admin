@@ -44,7 +44,10 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDeptEntity
 
     @Override
     public List<Node> tree() {
-        List<SysDeptEntity> all = this.list();
+        List<SysDeptEntity> all = this.list(
+                new LambdaQueryWrapper<SysDeptEntity>()
+                        .eq(SysDeptEntity::getDelFlag,0)
+        );
 
         List<Node> data = all.stream()
                 .map(this::entity2dto)

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="custom-frame">
         <el-input placeholder="输入关键字进行过滤" v-model="filterText">
 
         </el-input>
@@ -41,6 +41,8 @@ export default {
             treeLoading:false,
             filterText:'',
             data:[],
+            isNext:false,
+            parentNode:{},
             addFormVisible:false,
             defaultProps:{
                 children:'children',
@@ -79,15 +81,39 @@ export default {
             })
              this.treeLoading = false;
         },
-        showAddForm(node,data){
+        showAddForm(node,data,next){
             console.log(">>>>> node",node);
-            this.addFormVisible=false;
-            this.addForm.pDeptId = node.key;
-            console.log(">>>>> pDeptId",this.addForm.pDeptId);
-            console.log(">>>>> this.$refs.tree",this.$refs.tree);
+            console.log("next:"+next);
+            this.isNext = next;
+            if(next){
+                console.log("新增下级");
+                this.addForm.pDeptId = node.key;
+            }else{
+                console.log("新增同级");
+                console.log("node.parent:",node.parent);
+                
+                this.addForm.pDeptId = node.parent ? node.parent.key : 0;
+                this.parentNode = node.parent ? node.parent : node;
+            }
+
+            // console.log(">>>>> this.$refs.tree",this.$refs.tree);
             // this.$refs 是啥？
-             console.log(">>>>> node",this.$refs.tree.getNode(node.key));
+            //  console.log(">>>>> node",this.$refs.tree.getNode(node.key));
             this.addFormVisible=true;
+        },
+
+        openDeleteForm(node){
+            let _this = this;
+            console.log("删除，id: "+node.key);
+            this.$confirm('是否删除','警告',{
+                confirmButtonText:'确定',
+                cancelButtonText:'取消',
+                type:'warning'
+            }).then(() =>{
+                _this.remove(node.key);
+            }).catch(() =>{
+                console.log("取消删除");
+            })
         },
 
         cleanAddForm(){
@@ -108,15 +134,30 @@ export default {
            
             this.$axios.post('/api/v1/dept',addParams)
             .then(res => {
+                console.log("res",res);
                 if(res && res.status == 200 && res.data.code ==200){
-                    console.log("res",res);
                     const newChild = {id:res.data.data.deptId,name:res.data.data.name, children: []};
-                    console.log("111",newChild);
                     console.log("node",this.$refs.tree.getNode(this.addForm.pDeptId));
                     // 插入子类
-                    _this.$refs.tree.getNode(this.addForm.pDeptId).data.children.push(newChild);
-                     // 展开节点
-                    _this.$refs.tree.getNode(this.addForm.pDeptId).expanded = true;
+                    if(this.isNext){
+                         _this.$refs.tree.getNode(this.addForm.pDeptId).data.children.push(newChild);
+                        // 展开节点
+                         _this.$refs.tree.getNode(this.addForm.pDeptId).expanded = true;
+                    }else{
+                        console.log("nohe11",_this.$refs.tree.getNode(this.addForm.pDeptId));
+                        console.log("parentNode :",_this.parentNode);
+                        let parent = _this.parentNode;
+                        console.log("parent222",parent);
+                        if(parent){
+                           console.log("222222");
+                           // 如果是最高层，data 就是 list
+                           if(parent.data instanceof Array){
+                               parent.data.push(newChild);
+                           }else{
+                                parent.data.children.push(newChild);
+                           }
+                        }
+                    }
                 }else{
                     _this.$message.error("新增数据失败！"+ res.data.msg)
                 }
@@ -130,9 +171,24 @@ export default {
             this.addFormVisible=false;
         },
 
-        remove(node, data){
-            console.log(">>>>> 删除, params",node,data);
-
+        remove(id){
+            let _this = this;
+            console.log(">>>>> 正在删除,id:"+id);
+            this.$axios.delete('/api/v1/dept/'+id).then(res => {
+                console.log("delete res",res)
+                if(res && res.status == 200 && res.data.code == 200){
+                    console.log("delete success");
+                    console.log("node",_this.$refs.tree.getNode(id));
+                    
+                    const parent =  _this.$refs.tree.getNode(id).parent;
+                    const children = parent.data.children || parent.data;
+                    const index = children.findIndex(d => d.id === id);
+                    children.splice(index, 1);
+                }else{
+                    _this.$message.error("删除数据失败!");
+                }
+                
+            })
         },
 
         filterNode(value, data){
@@ -144,13 +200,14 @@ export default {
         
         renderContent(h, { node, data, store }){
             return(
-                <span class="custom-tree-node">
+                <div class="custom-tree-node">
                     <span>{node.label}</span>
                     <span>
-                        <el-button size="mini" type="text" on-click={() => {this.showAddForm(node,data)}}>Append</el-button>
-                        <el-button size="mini" type="text" on-click={() => this.remove(node,data)}>Delete</el-button>
+                        <el-button size="mini" type="text" on-click={() => {this.showAddForm(node,data,false)}}>Insert</el-button>
+                        <el-button size="mini" type="text" on-click={() => {this.showAddForm(node,data,true)}}>Append</el-button>
+                        <el-button size="mini" type="text" on-click={() => this.openDeleteForm(node)}>Delete</el-button>
                     </span>
-                </span>
+                </div>
 
             )
         }
@@ -164,7 +221,16 @@ export default {
 
 
 
-<style>
+<style scope>
+
+    .custom-frame{
+        width: 600px;
+        padding-top: 20px;
+    }
+
+    .custom-frame .el-input{
+        margin-bottom: 20px;
+    }
 
     .custom-tree-node{
         display: flex;
@@ -173,5 +239,9 @@ export default {
         font-size: 14px;
         padding-right: 8px;
         flex:1;
+    }
+    .el-tree-node{
+        margin-top: 8px;
+        font-family:'Avenir', Helvetica, Arial, sans-serif;
     }
 </style>
