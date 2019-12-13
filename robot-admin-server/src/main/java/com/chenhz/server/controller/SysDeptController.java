@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/dept")
+@RequestMapping("/v1/dept")
 @Api(tags = "部门管理")
 public class SysDeptController {
 

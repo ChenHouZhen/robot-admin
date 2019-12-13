@@ -62,17 +62,19 @@ export default {
 
         queryDeptTree(){
             let _this = this;
-            this.$axios.get('/api/dept/tree')
+            this.$axios.get('/api/v1/dept/tree')
             .then(function(res){
                 console.log("response",res);
                 if (res && res.status == 200 && res.data.code ==200) {
                     _this.data = res.data.data;
+                    console.log("this",this);
+                    console.log("_this",_this);
                 }else{
-                    this.$message.error("获取数据失败！")
+                    _this.$message.error("获取数据失败！")
                 }
             })
             .catch(err =>{
-                this.$message.error("获取数据失败！")
+                _this.$message.error("获取数据失败！")
                 console.log(err);
             })
              this.treeLoading = false;
@@ -104,7 +106,7 @@ export default {
                 "pid":this.addForm.pDeptId
             }
            
-            this.$axios.post('/api/dept',addParams)
+            this.$axios.post('/api/v1/dept',addParams)
             .then(res => {
                 if(res && res.status == 200 && res.data.code ==200){
                     console.log("res",res);
@@ -121,7 +123,7 @@ export default {
                 this.cleanAddForm();
             })
             .catch(err =>{
-                this.$message.error("新增数据失败！")
+                _this.$message.error("新增数据失败！")
                 console.log(err);
             })
             
