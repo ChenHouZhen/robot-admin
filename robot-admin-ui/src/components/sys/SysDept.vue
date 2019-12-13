@@ -128,6 +128,8 @@ export default {
             this.editFormVisible = true;
             console.log("data",data);
             this.editForm.id = data.id;
+            this.editForm.deptName = data.name;
+            this.editForm.orderNum = 1;
         },
 
         openDeleteForm(node){
