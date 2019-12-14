@@ -1,10 +1,38 @@
 <template>
-    <div class="custom-frame">
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText" style="margin-bottom: 20px">
-        </el-input>
-        <el-tree :data="data" node-key="id" :expand-on-click-node="false" :render-content="renderContent" 
-        :props="defaultProps" :filter-node-method="filterNode" ref="tree" v-loading="treeLoading" highlight-current>
-        </el-tree>
+    <div style="padding-top:20px;display:flex">
+        <div class="custom-frame">
+            <el-input placeholder="输入关键字进行过滤" v-model="filterText" style="margin-bottom: 20px">
+            </el-input>
+            <el-tree :data="data" node-key="id" :expand-on-click-node="false" :render-content="renderContent" 
+            :props="defaultProps" :filter-node-method="filterNode" ref="tree" v-loading="treeLoading" highlight-current
+            @node-click='handleNodeClick'>
+            </el-tree>
+        </div>
+        <div class="custom-detail" v-if="infoFormVisible" v-loading='infoLoading'>
+            <el-card>
+                <div slot="header">
+                    <span>部门详情</span>
+                </div>
+                <el-form :model="info">
+                    <el-form-item label="部门ID">
+                        <span>{{info.deptId}}</span>
+                    </el-form-item>
+                    <el-form-item label="部门名称">
+                        <span>{{info.name}}</span>
+                    </el-form-item>
+                    <el-form-item label="父级部门ID">
+                        <span>{{info.parentId}}</span>
+                    </el-form-item>
+                    <el-form-item label="排序号">
+                        <span>{{info.orderNum}}</span>
+                    </el-form-item>
+                    <el-form-item label="创建时间">
+                        <span>{{info.createTime}}</span>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+
+        </div>
 
         <el-dialog title="新增部门" :visible.sync="addFormVisible" width="25%" top="16vh" hide-required-asterisk="true"
         @keyup.enter.native="append()">
@@ -49,6 +77,7 @@
 export default {
     data() {
         return {
+            info:{},
             addForm:{
                 deptName:'',
                 orderNum: '1',
@@ -60,10 +89,12 @@ export default {
                 orderNum:1
             },
             treeLoading:false,
+            infoLoading:false,
             filterText:'',
             data:[],
             isNext:false,
             parentNode:{},
+            infoFormVisible:false,
             addFormVisible:false,
             editFormVisible:false,
             defaultProps:{
@@ -96,13 +127,39 @@ export default {
                 }else{
                     _this.$message.error("获取数据失败！")
                 }
+                _this.treeLoading = false;
             })
             .catch(err =>{
                 _this.$message.error("获取数据失败！")
                 console.log(err);
+                _this.treeLoading = false;
             })
-             this.treeLoading = false;
+             
         },
+
+        handleNodeClick(data){
+            this.infoFormVisible = true;
+            this.infoLoading = true;
+            this.queryDeptInfo(data.id);
+        },
+        queryDeptInfo(id){
+            console.log("查询部门信息，id:"+ id);
+            let _this = this;
+            this.$axios.get('/api/v1/dept/'+id)
+            .then(res =>{
+                console.log("查询部门信息，响应：",res);
+                if(res && res.status == 200 && res.data.code == 200){
+                    _this.info = res.data.data;
+                }else{
+                    _this.$message.error("查询信息失败 ");
+                }
+                _this.infoLoading = false;
+            })
+            .catch(res =>{
+                _this.infoLoading = false;
+            })
+        },
+
         showAddForm(node,data,next){
             console.log(">>>>> node",node);
             console.log("next:"+next);
@@ -276,9 +333,11 @@ export default {
 
 <style scope>
 
+    
+
     .custom-frame{
         width: 600px;
-        padding-top: 20px;
+        margin-right: 50px;
     }
 
     .custom-tree-node{
@@ -297,6 +356,13 @@ export default {
 
     .el-dialog__body{
         padding: 10px 20px;
+    }
+
+    .custom-detail{
+        margin-left: 300px;
+        width: 600px;
+        height: 100%;
+        background-color: red
     }
 
 </style>
