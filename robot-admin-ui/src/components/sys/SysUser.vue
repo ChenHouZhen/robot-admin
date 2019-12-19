@@ -62,6 +62,9 @@ export default {
         }
     },
     methods: {
+        query_table(){
+            
+        },
         view_avatar(src){
             console.log('查看头像：src：'+src)
             this.show_avatar = src;
