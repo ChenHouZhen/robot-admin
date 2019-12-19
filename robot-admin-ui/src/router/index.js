@@ -7,23 +7,19 @@ import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Table from '@/components/element/Table'
 import SysDept from '@/components/sys/SysDept'
+import SysUser from '@/components/sys/SysUser'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    },
-    {
       path: '/login',
       name: 'Login',
       component: Login,
     },
     {
-      path: '/home',
+      path: '/',
       name: 'Home',
       component: Home,
       meta:{
@@ -60,6 +56,14 @@ export default new Router({
           component: SysDept,
           meta:{
             title:"部门管理"
+          }
+        },
+        {
+          path: '/sys/user',
+          name: 'SysUser',
+          component: SysUser,
+          meta:{
+            title:"用户管理"
           }
         },
       ]

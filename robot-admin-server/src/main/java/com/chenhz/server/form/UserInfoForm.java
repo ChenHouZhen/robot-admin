@@ -1,5 +1,6 @@
 package com.chenhz.server.form;
 
+import com.chenhz.server.form.base.PageForm;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,14 +9,7 @@ import java.util.Date;
 
 @Data
 @ApiModel("用户查询表单")
-public class UserInfoForm {
-
-    @ApiModelProperty(value = "当前页",example = "1")
-    private Integer page;
-
-    @ApiModelProperty(value = "每页数",example = "1")
-    private Integer limit;
-
+public class UserInfoForm extends PageForm {
 
     @ApiModelProperty(value = "状态",example = "1")
     private Integer status;

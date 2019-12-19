@@ -1,6 +1,7 @@
 package com.chenhz.server.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chenhz.server.form.UserForm;
 import com.chenhz.server.form.UserInfoForm;
 import com.chenhz.server.service.SysUserService;
@@ -50,7 +51,8 @@ public class SysUserController {
     @GetMapping()
     @ApiOperation("查询")
     public R infos(UserInfoForm form){
-        return R.ok().put("data",form);
+        Page data = sysUserService.page(form);
+        return R.ok().put("data",data);
     }
 
     @DeleteMapping("/{userId}")

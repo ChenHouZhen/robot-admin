@@ -1,7 +1,9 @@
 package com.chenhz.server.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chenhz.server.entity.SysUserEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chenhz.server.form.UserInfoForm;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysUserService extends IService<SysUserEntity> {
 
+    Page page(UserInfoForm form);
 }

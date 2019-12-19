@@ -17,5 +17,4 @@ public class DeptForm {
     @ApiModelProperty(value = "排序")
     private Integer orderNum;
 
-
 }
