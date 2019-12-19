@@ -27,6 +27,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserEntity
         Page page = new Page(PageUtils.getPage(form),PageUtils.getLimit(form));
 
         this.page(page, new LambdaQueryWrapper<SysUserEntity>()
+                .eq(!StringUtils.isEmpty(form.getStatus()),SysUserEntity::getStatus,form.getStatus())
+                .eq(!StringUtils.isEmpty(form.getDeptId()),SysUserEntity::getDeptId,form.getDeptId())
+                .like(!StringUtils.isEmpty(form.getUserName()),SysUserEntity::getUsername,form.getUserName())
+                .like(!StringUtils.isEmpty(form.getPhone()),SysUserEntity::getMobile,form.getPhone())
                 .gt(!StringUtils.isEmpty(form.getStartTime()),SysUserEntity::getCreateTime,form.getStartTime())
                 .lt(!StringUtils.isEmpty(form.getEndTime()),SysUserEntity::getCreateTime,form.getEndTime())
         );

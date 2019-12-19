@@ -20,6 +20,9 @@ public class UserInfoForm extends PageForm {
     @ApiModelProperty(value = "部门ID",example = "1")
     private Integer deptId;
 
+    @ApiModelProperty(value = "手机号")
+    private String phone;
+
     /**
      * Springboot使用的默认json解析框架是jackjson框架
      *
