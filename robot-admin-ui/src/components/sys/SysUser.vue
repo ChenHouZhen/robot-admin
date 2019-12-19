@@ -28,11 +28,13 @@
         </el-table>
         <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
 
-        <div  class="custom_avatar_view" v-if="is_show_avatar">
+        <div class="custom_avatar_view" v-if="is_show_avatar">
             <span class="el-image-viewer__btn el-image-viewer__close">
-                <i class="el-icon-circle-close"></i>
-                <img class="custom_avatar_view_image" v-bind:src="show_avatar"/>
+                <i @click="close_avatar_img" class="el-icon-circle-close"></i>
             </span>
+            <div class="custom_avatar_view_image">
+                <img  v-bind:src="show_avatar"/>
+            </div>
         </div>
 
     </div>
@@ -64,6 +66,9 @@ export default {
             console.log('查看头像：src：'+src)
             this.show_avatar = src;
             this.is_show_avatar = true;
+        },
+        close_avatar_img(){
+            this.is_show_avatar = false;
         }
     },  
 }
