@@ -13,7 +13,6 @@
     export default {
         data() {
             return {
-                isShowTree:this.showTree,
                 treeLoading:false,
                 data:[],
                 pickDept:{
@@ -78,12 +77,6 @@
                         this.$emit('childEvent',  {id:  '' ,name: ''});
                     }
                 }
-            }
-        },
-        watch:{
-            showTree(){
-                console.log('值变化：showTree:'+ this.showTree)
-                this.isShowTree = this.showTree;
             }
         },
         mounted:function(){
