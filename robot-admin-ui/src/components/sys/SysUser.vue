@@ -87,6 +87,13 @@
                     <el-input v-model="user_form.password" show-password></el-input>
                 </el-form-item>
 
+                <el-form-item label="部门">
+                    <div>
+                        <el-input @focus="inputFocus" v-model="user_form.deptName"></el-input>
+                        <SysDeptTree :show-tree='is_show_dept_tree' @childEvent="getTreeNode"></SysDeptTree>
+                    </div>
+                </el-form-item>
+
                 <el-form-item style="display:flex;justify-content: flex-end;">
                     <el-button type="primary">提交</el-button>
                     <el-button>取消</el-button>
@@ -100,13 +107,17 @@
 
 
 <script>
+import SysDeptTree from './SysDeptTree'
+
 export default {
+    
     data() {
         return {
             table_loading:false,
             show_avatar:'',
             is_show_avatar:false,
             is_show_add_user_form:false,
+            is_show_dept_tree:false,
             table_data:[],
             query_form:{
                 user_name:'',
@@ -128,10 +139,24 @@ export default {
                 email:'',
                 avatar:'',
                 deptId:'',
+                deptName:'',
             }
         }
     },
     methods: {
+        /**
+         * 使用 $emit 传递给父组件数据
+         * 子组件的回调方法，更新部门id 和部门名称
+         */
+        getTreeNode({id,name}){
+            console.log("id:"+id+" name:"+name)
+            this.user_form.deptId = id;
+            this.user_form.deptName = name;
+        },
+        inputFocus(){
+            console.log('this.is_show_dept_tree：',this.is_show_dept_tree)
+            this.is_show_dept_tree = true;
+        },
         queryTable(){
             let _this = this;
             this.table_loading = true;
@@ -189,6 +214,7 @@ export default {
             this.query_form.end_time = '';
             this.query_form.phone ='';
             this.query_form.deptId = '';
+            // this.query_form.deptName = '';
             this.query_form.status ='1';
             this.queryTable();
         },
@@ -196,9 +222,20 @@ export default {
             this.is_show_add_user_form = true;
         }
     }, 
+
+    /**
+     * 初始化加载
+     */
     mounted:function(){
         this.table_loading = true;
         this.queryTable();
+    },
+
+    /**
+     * 引入组件
+     */
+    components:{
+        SysDeptTree
     }
 }
 </script>
