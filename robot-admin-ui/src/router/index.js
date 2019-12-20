@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import Knowledge from '@/components/Knowledge'
 import Button from '@/components/element/Button'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Table from '@/components/element/Table'
 import SysDept from '@/components/sys/SysDept'
 import SysUser from '@/components/sys/SysUser'
+import SysDeptTree from '@/components/sys/SysDeptTree'
 
 Vue.use(Router)
 
@@ -43,20 +42,22 @@ export default new Router({
           }
         },
         {
-          path: '/knowledge',
-          name: 'Knowledge',
-          component: Knowledge,
-          meta:{
-            title:"知识点管理"
-          }
-        },
-        {
           path: '/sys/dept',
           name: 'SysDept',
           component: SysDept,
           meta:{
             title:"部门管理"
-          }
+          },
+          children:[
+            // {
+            //   path: '/tree',
+            //   name: 'SysDeptTree',
+            //   component: SysDeptTree,
+            //   meta:{
+            //     title:"部门树"
+            //   }
+            // },
+          ]
         },
         {
           path: '/sys/user',
@@ -64,6 +65,14 @@ export default new Router({
           component: SysUser,
           meta:{
             title:"用户管理"
+          }
+        },
+        {
+          path: '/tree',
+          name: 'SysDeptTree',
+          component: SysDeptTree,
+          meta:{
+            title:"部门树"
           }
         },
       ]
