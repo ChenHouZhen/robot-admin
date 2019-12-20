@@ -57,6 +57,9 @@
             //     this.pickDept.name = data.name;
             // },
 
+            /**
+             * 实现 tree 的单选功能
+             */
             handleCheckChange(data,isCheck,self){
                 console.log(data,isCheck,self);
                 if(isCheck){
