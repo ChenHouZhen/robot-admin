@@ -1,7 +1,8 @@
 <template>
     <div v-if="showTree" class="custom_tree">
         <el-card>
-            <el-tree ref='tree' :data="data" show-checkbox node-key="id" v-loading="treeLoading" :props="defaultProps" @check-change='handleCheckChange' default-expand-all check-strictly></el-tree>
+            <el-tree ref='tree' :data="data" show-checkbox node-key="id" v-loading="treeLoading" 
+            :props="defaultProps" @check-change='handleCheckChange' default-expand-all check-strictly></el-tree>
             <!-- <div style="display: flex;justify-content: flex-end;">
                 <el-button size="mini" type="primary" @click="isShowTree = false">关闭</el-button>
             </div> -->
@@ -28,8 +29,6 @@
         },
         props:{
             showTree:Boolean,
-            pickDeptId:Number,
-            pickDeptName:String,
         },
         methods: {
             queryDeptTree(){
@@ -72,7 +71,7 @@
                     this.$emit('childEvent',  {id:  data.id ,name: data.name});
                 }else{
                     // 点击已选择的
-                    if(data.id == this.pickDeptId){
+                    if(data.id == this.pickDept.id){
                         this.pickDept.id = '';
                         this.pickDept.name = '';
                         this.$refs.tree.setCheckedKeys([])
@@ -97,6 +96,8 @@
         position:absolute;
         z-index: 100;
         width: 100%;
+        max-height: 300px;
+        overflow: auto;
     }
 
 </style>

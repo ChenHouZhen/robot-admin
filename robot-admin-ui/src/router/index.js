@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Button from '@/components/element/Button'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
-import Table from '@/components/element/Table'
 import SysDept from '@/components/sys/SysDept'
 import SysUser from '@/components/sys/SysUser'
 import SysDeptTree from '@/components/sys/SysDeptTree'
@@ -34,14 +33,6 @@ export default new Router({
           }
         },
         {
-          path: '/table',
-          name: 'Table',
-          component: Table,
-          meta:{
-            title:"表格管理"
-          }
-        },
-        {
           path: '/sys/dept',
           name: 'SysDept',
           component: SysDept,
@@ -49,14 +40,14 @@ export default new Router({
             title:"部门管理"
           },
           children:[
-            // {
-            //   path: '/tree',
-            //   name: 'SysDeptTree',
-            //   component: SysDeptTree,
-            //   meta:{
-            //     title:"部门树"
-            //   }
-            // },
+            {
+              path: '/tree',
+              name: 'SysDeptTree',
+              component: SysDeptTree,
+              meta:{
+                title:"部门树"
+              }
+            },
           ]
         },
         {
@@ -67,14 +58,14 @@ export default new Router({
             title:"用户管理"
           }
         },
-        {
-          path: '/tree',
-          name: 'SysDeptTree',
-          component: SysDeptTree,
-          meta:{
-            title:"部门树"
-          }
-        },
+        // {
+        //   path: '/tree',
+        //   name: 'SysDeptTree',
+        //   component: SysDeptTree,
+        //   meta:{
+        //     title:"部门树"
+        //   }
+        // },
       ]
     }
   ]
