@@ -21,7 +21,7 @@ public class TimeHandler {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        log.debug(">>>>> Date 日期装换 <<<<<");
+//        log.debug(">>>>> Date 日期装换 <<<<<");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //是否严格解析时间 false则严格解析 true宽松解析
         dateFormat.setLenient(false);
