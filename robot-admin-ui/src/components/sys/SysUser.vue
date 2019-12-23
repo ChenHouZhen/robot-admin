@@ -49,10 +49,19 @@
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" fixed='right'>
-                        <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" icon="el-icon-edit" size="mini">编辑</el-button>
-                            <el-button type="danger" size="mini" icon="el-icon-delete">禁用</el-button>
+                        <template slot-scope="scope" v-if="operation">
+                            <el-button @click="openEditUserForm(scope.row)" icon="el-icon-edit" size="mini">编辑</el-button>
+                            <el-popover ref="popover{{$index}}" width="160"  v-model="scope.row.visible">
+                                <p>确定禁用吗？</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="closeComfirmForbid(scope.row)" >取消</el-button>
+                                    <el-button type="primary" size="mini" @click="handleForbid(scope.row)">确定</el-button>
+                                </div>
+                            </el-popover>
+                            <el-button v-popover:popover{{$index} type="danger" size="mini" icon="el-icon-delete" 
+                            @click="openComfirmForbid(scope.row)" :loading="forbid_user_loading">禁用</el-button>
                         </template>
+                        
                     </el-table-column>
                 </el-table>
                 <el-pagination background layout="total, sizes,prev, pager, next" :current-page.sync="query_form.page.current_page" 
@@ -69,39 +78,92 @@
             </div>
         </div>
 
+        <!-- 新增表单 -->
         <el-dialog title="新增用户" :visible.sync="is_show_add_user_form" width="30%">
-            <el-form :model="user_form" label-width="80px">
-                <el-form-item label="用户名">
+            <el-form :model="user_form" label-width="80px" ref="addUserForm">
+                <el-form-item label="用户名" prop="username">
                     <el-input v-model="user_form.username"></el-input>
                 </el-form-item>
 
-                <el-form-item label="手机号">
+                <el-form-item label="手机号" prop="phone">
                     <el-input v-model="user_form.phone"></el-input>
                 </el-form-item>
 
-                <el-form-item label="邮箱">
+                <el-form-item label="邮箱" prop="email">
                     <el-input v-model="user_form.email"></el-input>
                 </el-form-item>
 
-                <el-form-item label="密码">
+                <el-form-item label="密码" prop="password">
                     <el-input v-model="user_form.password" show-password></el-input>
                 </el-form-item>
 
-                <el-form-item label="部门">
-                    <div>
-                        <el-input @focus="inputFocus" v-model="user_form.deptName"></el-input>
-                        <SysDeptTree :show-tree='is_show_dept_tree' @childEvent="getTreeNode"></SysDeptTree>
-                    </div>
+                <el-form-item label="部门" prop="deptName">
+                    <el-row type='flex' :gutter="6">
+                      <el-col :span="6">
+                          <el-input @focus="inputFocus" v-model="user_form.deptId" readonly ></el-input>
+                      </el-col>
+                      <el-col :span="14">
+                          <el-input @focus="inputFocus" v-model="user_form.deptName" readonly ></el-input>
+                      </el-col>
+                      <!-- todo:后期优化 -->
+                      <el-col :span="4">
+                          <el-button type="primary" @click="is_show_dept_tree = false">关闭</el-button>
+                      </el-col>
+                    </el-row>
+
+                    <SysDeptTree :show-tree='is_show_dept_tree' @childEvent="getTreeNode"></SysDeptTree>
                 </el-form-item>
 
                 <el-form-item style="display:flex;justify-content: flex-end;">
-                    <el-button type="primary">提交</el-button>
-                    <el-button>取消</el-button>
+                    <el-button type="primary" @click="add_user" :loading="add_user_loading">提交</el-button>
+                    <el-button @click="cancel_add_user">取消</el-button>
                 </el-form-item>
             </el-form>
-
         </el-dialog>
         
+        <!-- 编辑表单 -->
+        <el-dialog title="编辑用户" :visible.sync="is_show_edit_user_form" width="30%">
+                        <el-form :model="user_form" label-width="80px" ref="addUserForm">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="user_form.username"></el-input>
+                </el-form-item>
+
+                <el-form-item label="手机号" prop="phone">
+                    <el-input v-model="user_form.phone"></el-input>
+                </el-form-item>
+
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="user_form.email"></el-input>
+                </el-form-item>
+
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="user_form.password" show-password></el-input>
+                </el-form-item>
+
+                <el-form-item label="部门" prop="deptName">
+                    <el-row type='flex' :gutter="6">
+                      <el-col :span="6">
+                          <el-input @focus="inputFocus" v-model="user_form.deptId" readonly ></el-input>
+                      </el-col>
+                      <el-col :span="14">
+                          <el-input @focus="inputFocus" v-model="user_form.deptName" readonly ></el-input>
+                      </el-col>
+                      <!-- todo:后期优化 -->
+                      <el-col :span="4">
+                          <el-button type="primary" @click="is_show_dept_tree = false">关闭</el-button>
+                      </el-col>
+                    </el-row>
+
+                    <SysDeptTree :show-tree='is_show_dept_tree' @childEvent="getTreeNode"></SysDeptTree>
+                </el-form-item>
+
+                <el-form-item style="display:flex;justify-content: flex-end;">
+                    <el-button type="primary" @click="edit_user" :loading="edit_user_loading">提交</el-button>
+                    <el-button @click="is_show_edit_user_form=false">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
     </div>
 </template>
 
@@ -113,11 +175,18 @@ export default {
     
     data() {
         return {
+            // visible:false,
+            operation:true,
             table_loading:false,
+            add_user_loading:false,
+            edit_user_loading:false,
+            forbid_user_loading:false,
             show_avatar:'',
+            newOpenForbidRow:null,
             is_show_avatar:false,
             is_show_add_user_form:false,
             is_show_dept_tree:false,
+            is_show_edit_user_form:false,
             table_data:[],
             query_form:{
                 user_name:'',
@@ -133,23 +202,46 @@ export default {
                 }
             },
             user_form:{
+                userId:'',
                 username:'',
                 password:'123456',
                 phone:'',
                 email:'',
-                avatar:'',
+                avatar:'https://hqjy-coursetest.oss-cn-shenzhen.aliyuncs.com/knowledge_base/image/portrait/20190107/3e2cfd43981f4cb1b7b38a494aea7f36.jpg',
                 deptId:'',
                 deptName:'',
             }
         }
     },
     methods: {
+
+        openComfirmForbid(row){
+            if(this.newOpenForbidRow){
+                console.log("存在...")
+                this.newOpenForbidRow.visible = false;
+            }
+
+            row.visible = true;
+            this.newOpenForbidRow = row;
+        },
+
+
+        closeComfirmForbid(row){
+            row.visible = false;
+            this.newOpenForbidRow = null;
+        },
+
+        resertAddUserForm(){
+            console.log("重置用户新增框...")
+            this.$refs.addUserForm.resetFields();
+        },
+
         /**
          * 使用 $emit 传递给父组件数据
          * 子组件的回调方法，更新部门id 和部门名称
          */
         getTreeNode({id,name}){
-            console.log("id:"+id+" name:"+name)
+            console.log("id:"+ id+" name:"+name)
             this.user_form.deptId = id;
             this.user_form.deptName = name;
         },
@@ -162,7 +254,7 @@ export default {
             this.table_loading = true;
             let param = {
                 userName:this.query_form.user_name,
-                deptId:'',
+                deptId:this.query_form.deptId,
                 phone:this.query_form.phone,
                 startTime:this.query_form.start_time,
                 endTime:this.query_form.end_time,
@@ -170,6 +262,13 @@ export default {
                 limit:this.query_form.page.page_size,
                 status:this.query_form.status,
             }
+
+            if(this.query_form.status == 0){
+                this.operation = false;
+            }else{
+                this.operation = true;
+            }
+
             this.$axios.get('/api/v1/users',{
                 params : param
             })
@@ -179,12 +278,124 @@ export default {
                     console.log("Query table data success");
                     _this.table_data = res.data.data.records;
                     _this.query_form.page.total_size = parseInt(res.data.data.total);
+                    
+                    /**
+                     * 插入新字段
+                     */
+                    _this.table_data.forEach(item =>[
+                        _this.$set(item,'visible',false)
+                    ])
+                    console.log('data',_this.table_data)
                 }
                 _this.table_loading = false;
             }).catch(res => {
                 _this.table_loading = false;
             })
         },
+
+        /**
+         * 新增用户
+         */
+        add_user(){
+            this.add_user_loading = true;
+            let _this = this;
+            let addUserParams = {
+                username:this.user_form.username,
+                deptId:this.user_form.deptId,
+                mobile:this.user_form.phone,
+                email:this.user_form.email,
+                password:this.user_form.password,
+                deptId:this.user_form.deptId,
+                avatar:this.user_form.avatar,
+            }
+            this.$axios.post('/api/v1/users',addUserParams)
+            .then(res => {
+                console.log("新增用户响应：",res)
+                if(res && res.status == 200 && res.data.code == 200){
+                    console.log("新增用户成功...");
+                    _this.is_show_add_user_form = false;
+                    _this.resertAddUserForm();
+                    _this.queryTable();
+                
+                }
+                _this.add_user_loading = false;
+            })
+            .catch(err => {
+                console.log("新增用户失败...");
+                 _this.add_user_loading = false;
+            })
+        },
+
+        openEditUserForm(row){
+            this.is_show_edit_user_form = true;
+            let _this = this;
+            this.user_form.userId = row.userId;
+            this.$axios('/api/v1/users/'+row.userId)
+            .then( res =>{
+                if(res && res.status== 200 && res.data.code == 200){
+                    let data = res.data.data;
+                    if(data){
+                        this.user_form.phone = data.mobile;
+                        this.user_form.email = data.email;
+                        this.user_form.username = data.username;
+                        this.user_form.password = data.password;
+                        this.user_form.deptId = data.deptId;
+                    }
+                }
+            })
+        },
+
+        /**
+         * 编辑用户
+         */
+        edit_user(row){
+            this.edit_user_loading = true;
+            let _this = this;
+            let editUserParams = {
+                username:this.user_form.username,
+                deptId:this.user_form.deptId,
+                mobile:this.user_form.phone,
+                email:this.user_form.email,
+                password:this.user_form.password,
+                deptId:this.user_form.deptId,
+                avatar:this.user_form.avatar,
+            }
+            this.$axios.put('/api/v1/users/'+this.user_form.userId,editUserParams)
+            .then(res => {
+                console.log("编辑用户响应：",res)
+                if(res && res.status == 200 && res.data.code == 200){
+                    console.log("编辑用户成功...");
+                    _this.is_show_edit_user_form = false;
+                    _this.queryTable();
+                }
+                _this.edit_user_loading = false;
+            })
+            .catch(err => {
+                console.log("编辑用户失败...");
+                 _this.edit_user_loading = false;
+            })
+        },
+
+        handleForbid(row){
+            this.forbid_user_loading = true;
+            console.log('禁用用户...')
+            let _this = this;
+            this.closeComfirmForbid(row)
+            this.$axios.delete('/api/v1/users/'+row.userId)
+            .then(res => {
+                _this.forbid_user_loading = false;
+                _this.queryTable();
+            })
+            .catch(err =>{
+                _this.forbid_user_loading = false;
+            })
+        },
+
+        cancel_add_user(){
+            this.is_show_add_user_form = false;
+            this.resertAddUserForm();
+        },
+
         view_avatar(src){
             console.log('查看头像：src：'+src)
             if(!src){

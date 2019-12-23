@@ -31,4 +31,8 @@ public class UserForm {
     @Length(max = 100, message = "手机号长度不能大于100个字符")
     private String mobile;
 
+    private String avatar;
+
+    private Integer deptId;
+
 }

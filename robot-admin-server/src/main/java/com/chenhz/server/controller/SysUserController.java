@@ -42,6 +42,8 @@ public class SysUserController {
         entity.setEmail(form.getEmail());
         entity.setMobile(form.getMobile());
         entity.setPassword(form.getPassword());
+        entity.setDeptId(form.getDeptId());
+        entity.setAvatar(form.getAvatar());
         entity.setStatus(1);
 
         sysUserService.save(entity);
@@ -55,7 +57,6 @@ public class SysUserController {
         SysUserEntity entity = new SysUserEntity();
         entity.setUserId(userId);
         entity.setUsername(form.getUsername());
-        entity.setCreateTime(new Date());
         entity.setEmail(form.getEmail());
         entity.setMobile(form.getMobile());
         entity.setPassword(form.getPassword());
@@ -83,7 +84,7 @@ public class SysUserController {
     public R delete(@PathVariable Integer userId){
         SysUserEntity entity = new SysUserEntity();
         entity.setUserId(userId);
-        entity.setStatus(1);
+        entity.setStatus(0);
         sysUserService.updateById(entity);
 
         return R.ok().put("data",sysUserService.getById(userId));

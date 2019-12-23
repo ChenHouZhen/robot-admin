@@ -33,6 +33,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserEntity
                 .like(!StringUtils.isEmpty(form.getPhone()),SysUserEntity::getMobile,form.getPhone())
                 .gt(!StringUtils.isEmpty(form.getStartTime()),SysUserEntity::getCreateTime,form.getStartTime())
                 .lt(!StringUtils.isEmpty(form.getEndTime()),SysUserEntity::getCreateTime,form.getEndTime())
+                .orderByDesc(SysUserEntity::getCreateTime)
         );
 
         return page;
