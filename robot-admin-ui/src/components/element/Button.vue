@@ -2,7 +2,7 @@
     <div>
         <el-button type='primary' @click="get">获取表格</el-button>
         <el-button type='primary' @click="refresh">刷新表格</el-button>
-        <button class="button" type="button"><span>自定义按钮</span></button>
+        <button id='self' class="button" type="button"><span>自定义按钮</span></button>
         <div>
             <el-table :data="menuData" max-height="250" style="width:100%" v-loading="tableLoading" row-key="path"  :tree-props="{children: 'children'}">>
                 <!-- <el-table-column type="expand">

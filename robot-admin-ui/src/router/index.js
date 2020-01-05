@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import SysDept from '@/components/sys/SysDept'
 import SysUser from '@/components/sys/SysUser'
 import SysDeptTree from '@/components/sys/SysDeptTree'
+import JqueryTable from '@/pages/jquery/table'
 
 Vue.use(Router)
 
@@ -56,6 +57,14 @@ export default new Router({
           component: SysUser,
           meta:{
             title:"用户管理"
+          }
+        },
+        {
+          path: '/jquery/table',
+          name: 'JqueryTable',
+          component: JqueryTable,
+          meta:{
+            title:"JQuery 表格"
           }
         },
         // {

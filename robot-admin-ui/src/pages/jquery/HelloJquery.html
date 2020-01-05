@@ -5,22 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>JQuery Demo</title>
-    <script src="jquery-3.4.1.js"></script>
+    <link href="../lib/bootstart/css/bootstrap.css" rel="stylesheet">
+    <link href="../lib/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+    <script src="../lib/jquery/jquery-3.4.1.js"></script>
+    <script src="../lib/layer/layer.js"></script>
+    <script src="../lib/bootstart/js/bootstrap.js"></script>
+    <script src="../lib/bootstrap-table/bootstrap-table.js"></script>
 </head>
 <body>
     <h3>标题</h3>
+    <p id="p">新文本</p>
+    <button id="button_1" type="button" class="btn btn-primary" onclick="show_alert()">弹窗</button>
+    <table id="table" class="table table-hover"></table>
 </body>
 
 <script>
     $(function () {
         hide();
+        queryTable()
     });
 
     function hide(){
         $('h3').click(function(){
             $(this).hide();
         })
-    }
-</script>
 
+        $('#p').click(function(){
+            console.log("点击")
+        })
+    }
+    
+    function show_alert(){
+        layer.open({
+            title:'标题',
+            content:'确认吗',
+            btn:['取消','确定']
+            ,btn1:function(index){
+                console.log('取消');
+                layer.close(index);
+            }
+            ,btn2:function(){
+                console.log('确定')
+            }
+            ,cancel:function(){
+                return true;
+            }
+        })
+    }
+
+    function responseHandler(rsp){
+        console.log(rsp)
+    }
+
+    function queryTable(){
+        $('#table').bootstrapTable({
+            url:'localhost:8081/v1/users',
+            columns: [{
+                field: 'id',
+                title: 'Item ID'
+            }, {
+                field: 'name',
+                title: 'Item Name'
+            }, {
+                field: 'price',
+                title: 'Item Price'
+            }],
+            responseHandler: responseHandler
+            })
+        }
+
+</script>
+    
 </html>
