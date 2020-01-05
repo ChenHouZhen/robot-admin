@@ -53,22 +53,47 @@
         })
     }
 
-    function responseHandler(rsp){
-        console.log(rsp)
+    function responseHandler(res){
+        console.log("响应",res);
+        return { rows: res.data.records, total: res.data.total };
+    }
+    // 查询条件
+    function queryParams(params) {
+        var curParams = {
+            // 传递参数查询参数 
+            page:       1,
+            limit:        10
+        };
+    return curParams;
     }
 
     function queryTable(){
         $('#table').bootstrapTable({
             url:'http://localhost:8081/v1/users',
+            method: 'get',
+            pageNumber: 1,                        // 初始化加载第一页，默认第一页
+            pageSize: 10,                         // 每页的记录行数（*） 
+            queryParams: queryParams,                   // 传递参数（*）
+            pagination:true,
+            showExport:true,
             columns: [{
-                field: 'id',
-                title: 'Item ID'
+                field: 'userId',
+                title: '用户ID'
             }, {
-                field: 'name',
-                title: 'Item Name'
+                field: 'username',
+                title: '用户名'
             }, {
-                field: 'price',
-                title: 'Item Price'
+                field: 'email',
+                title: '邮件'
+            }, {
+                field: 'mobile',
+                title: '手机号'
+            }, {
+                field: 'createTime',
+                title: '创建时间'
+            }, {
+                field: 'status',
+                title: '状态'
             }],
             responseHandler: responseHandler
             })
