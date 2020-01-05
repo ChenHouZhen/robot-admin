@@ -13,28 +13,29 @@
     <script src="../lib/bootstrap-table/bootstrap-table.js"></script>
 </head>
 <body>
-    <h3>标题</h3>
-    <p id="p">新文本</p>
-    <button id="button_1" type="button" class="btn btn-primary" onclick="show_alert()">弹窗</button>
+    <form class="form-inline" style="margin:10px">
+        <div class="form-group">
+            <label>Email Address:</label>
+            <input id="email" type="email" placeholder="Email" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <input id="name" class="form-control" placeholder="name">
+        </div>
+        <div class="form-group">
+                <label>Phone</label>
+                <input id="phone" class="form-control" placeholder="phone">
+        </div>
+        <button type="button" class="btn btn-default" onclick="queryTable()">查询</button>
+    </form>
     <table id="table" class="table table-hover"></table>
 </body>
 
 <script>
     $(function () {
-        hide();
         queryTable()
     });
 
-    function hide(){
-        $('h3').click(function(){
-            $(this).hide();
-        })
-
-        $('#p').click(function(){
-            console.log("点击")
-        })
-    }
-    
     function show_alert(){
         layer.open({
             title:'标题',
@@ -59,23 +60,28 @@
     }
     // 查询条件
     function queryParams(params) {
+        console.log('name:',$('#name').val())
         var curParams = {
             // 传递参数查询参数 
-            page:       1,
-            limit:        10
+            userName:$('#name').val(),
+            email:$('#email').val(),
+            phone:$('#phone').val(),
+            page:1,
+            limit:10
         };
-    return curParams;
+        return curParams;
     }
 
     function queryTable(){
+        console.log('点击查询')
+        $("#table").bootstrapTable('destroy'); 
         $('#table').bootstrapTable({
             url:'http://localhost:8081/v1/users',
+            cache: false,  
             method: 'get',
             pageNumber: 1,                        // 初始化加载第一页，默认第一页
             pageSize: 10,                         // 每页的记录行数（*） 
-            queryParams: queryParams,                   // 传递参数（*）
-            pagination:true,
-            showExport:true,
+            queryParams: queryParams,             // 传递参数（*）
             columns: [{
                 field: 'userId',
                 title: '用户ID'
