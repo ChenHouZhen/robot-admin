@@ -7,51 +7,90 @@
     <title>JQuery Demo</title>
     <link href="../lib/bootstart/css/bootstrap.css" rel="stylesheet">
     <link href="../lib/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+    <link href="../lib/layui/css/layui.css" rel="stylesheet">
     <script src="../lib/jquery/jquery-3.4.1.js"></script>
-    <script src="../lib/layer/layer.js"></script>
     <script src="../lib/bootstart/js/bootstrap.js"></script>
     <script src="../lib/bootstrap-table/bootstrap-table.js"></script>
+    <script src="../lib/layui/layui.js"></script>
+    
 </head>
 <body>
-    <form class="form-inline" style="margin:10px">
+    <form id="search-form" class="form-inline" style="margin:10px">
         <div class="form-group">
-            <label>Email Address:</label>
+            <label>邮件:</label>
             <input id="email" type="email" placeholder="Email" class="form-control">
         </div>
         <div class="form-group">
-            <label>Name</label>
+            <label>名称:</label>
             <input id="name" class="form-control" placeholder="name">
         </div>
         <div class="form-group">
-                <label>Phone</label>
-                <input id="phone" class="form-control" placeholder="phone">
+            <label>手机:</label>
+            <input id="phone" class="form-control" placeholder="phone">
         </div>
-        <button type="button" class="btn btn-default" onclick="queryTable()">查询</button>
+        <div class="form-group select-time">
+            <label>时间范围：</label>
+            <input id="startTime" type="text" placeholder="开始时间" class="form-control">
+            <span>-</span>
+            <input id="endTime" type="text" placeholder="结束时间" class="form-control">
+        </div>
+        <button type="button" class="btn btn-primary" onclick="queryTable()">查询</button>
+        <button type="button" class="btn btn-default" onclick="resert()">重置</button>
+        <button type="button" class="btn btn-default" onclick="block()">遮雾罩</button>
     </form>
     <table id="table" class="table table-hover"></table>
 </body>
 
 <script>
     $(function () {
-        queryTable()
+        queryTable();
+        time_picker();
     });
 
-    function show_alert(){
-        layer.open({
-            title:'标题',
-            content:'确认吗',
-            btn:['取消','确定']
-            ,btn1:function(index){
-                console.log('取消');
-                layer.close(index);
-            }
-            ,btn2:function(){
-                console.log('确定')
-            }
-            ,cancel:function(){
-                return true;
-            }
-        })
+    function time_picker(){
+        layui.use('laydate', function() {
+            var laydate = layui.laydate;
+            var startDate = laydate.render({
+                elem: '#startTime',
+                max: $('#endTime').val(),
+                theme: 'molv',
+                trigger: 'click',
+                done: function(value, date) {
+                    // 结束时间大于开始时间
+                    if (value !== '') {
+                        endDate.config.min.year = date.year;
+                        endDate.config.min.month = date.month - 1;
+                        endDate.config.min.date = date.date;
+                    } else {
+                        endDate.config.min.year = '';
+                        endDate.config.min.month = '';
+                        endDate.config.min.date = '';
+                    }
+                }
+            });
+            var endDate = laydate.render({
+                elem: '#endTime',
+                min: $('#startTime').val(),
+                theme: 'molv',
+                trigger: 'click',
+                done: function(value, date) {
+                    // 开始时间小于结束时间
+                    if (value !== '') {
+                        startDate.config.max.year = date.year;
+                        startDate.config.max.month = date.month - 1;
+                        startDate.config.max.date = date.date;
+                    } else {
+                        startDate.config.max.year = '';
+                        startDate.config.max.month = '';
+                        startDate.config.max.date = '';
+                    }
+                }
+            });
+        });
+    }
+
+    function resert(){
+        $('#search-form')[0].reset();
     }
 
     function responseHandler(res){
